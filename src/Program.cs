@@ -1,8 +1,11 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using sda_onsite_2_csharp_backend_teamwork.src.Abstraction;
 using sda_onsite_2_csharp_backend_teamwork.src.Database;
+using sda_onsite_2_csharp_backend_teamwork.src.Enums;
 using sda_onsite_2_csharp_backend_teamwork.src.Middlewares;
 using sda_onsite_2_csharp_backend_teamwork.src.Repository;
 using sda_onsite_2_csharp_backend_teamwork.src.Server;
@@ -12,9 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services.AddDbContext<DatabaseContext>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -60,6 +63,37 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// configuring DB
+var _config = builder.Configuration;
+
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(@$"Host={_config["Db:Host"]};Username={_config["Db:Username"]};Database={_config["Db:Database"]};Password={_config["Db:Password"]};Port={_config["Db:Port"]}");
+
+dataSourceBuilder.MapEnum<Role>();
+dataSourceBuilder.MapEnum<Status>();
+
+var dataSource = dataSourceBuilder.Build();
+
+builder.Services.AddDbContext<DatabaseContext>((options) =>
+{
+    options.UseNpgsql(dataSource).UseSnakeCaseNamingConvention();
+});
+
+
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins(builder.Configuration["Cors:Origin"]!)
+                          .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .SetIsOriginAllowed((host) => true)
+                            .AllowCredentials();
+                      });
+});
+
+
 var app = builder.Build();
 
 app.UseMiddleware<CustomErrorMiddleware>();
@@ -73,6 +107,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.MapControllers();
 
