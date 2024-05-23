@@ -63,7 +63,7 @@ public class UserController : BaseController
     [HttpPatch("{id}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<UserReadDto> UpdateOne(Guid id, User user)
+    public ActionResult<UserReadDto> UpdateOne(Guid id, UserEditDto user)
     {
         UserReadDto? updatedUser = _userService.UpdateOne(id, user);
         if (updatedUser is not null)
