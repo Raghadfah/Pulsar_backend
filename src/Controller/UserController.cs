@@ -73,10 +73,10 @@ public class UserController : BaseController
         else return BadRequest();
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult DeleteOne(Guid id, User user)
+    public ActionResult DeleteOne(Guid id)
     {
         bool isDeleted = _userService.DeleteOne(id);
         if (!isDeleted)
