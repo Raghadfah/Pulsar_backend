@@ -45,4 +45,10 @@ public class AddressRepository : IAddressRepository
         _addresses.Remove(address);
         return true;
     }
+     public IEnumerable<Address> FindByUserId(Guid id)
+    {
+        var addresses = _addresses.Where((address) => address.UserId == id);
+
+        return addresses;
+    }
 }

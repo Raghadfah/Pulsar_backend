@@ -12,4 +12,5 @@ public interface IAddressRepository
     public Address CreateOne(Address address);
     public Address? UpdateOne(Address updatedAddress);
     public bool DeleteOne(Guid id);
+    public IEnumerable<Address> FindByUserId(Guid id);
 }

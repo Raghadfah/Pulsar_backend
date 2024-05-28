@@ -10,4 +10,5 @@ public interface IAddressService
     public AddressReadDto CreateOne(AddressCreateDto address, string userId);
     public AddressReadDto? UpdateOne(Guid id, Address address);
     public bool DeleteOne(Guid id);
+    public IEnumerable<AddressReadDto> FindByUserId(Guid id);
 }

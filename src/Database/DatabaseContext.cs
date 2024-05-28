@@ -15,7 +15,7 @@ public class DatabaseContext : DbContext
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     // {
-    //     var dataSourceBuilder = new NpgsqlDataSourceBuilder(@$"Host={_config["Db:Host"]};Username={_config["Db:Username"]};Database={_config["Db:Database"]};Password={_config["Db:Password"]};Port={_config["Db:Port"]}");
+    //     var dataSourceBuilder = new NpgsqlDataSourceBuilder(@$"Host={_config["Db_Host"]};Username={_config["Db_Username"]};Database={_config["Db_Database"]};Password={_config["Db_Password"]};Port={_config["Db_Port"]}");
     //     dataSourceBuilder.MapEnum<Role>();
     //     dataSourceBuilder.MapEnum<Status>();
     //     var dataSource = dataSourceBuilder.Build();
@@ -30,7 +30,7 @@ public class DatabaseContext : DbContext
     {
         modelBuilder.HasPostgresEnum<Role>();
         modelBuilder.HasPostgresEnum<Status>();
-        
+
 
     }
 }

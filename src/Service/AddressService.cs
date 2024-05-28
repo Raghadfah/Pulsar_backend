@@ -50,4 +50,10 @@ public class AddressService : IAddressService
     {
         return _addressRepository.DeleteOne(id);
     }
+    public IEnumerable<AddressReadDto> FindByUserId(Guid id)
+    {
+        var address = _addressRepository.FindByUserId(id);
+        var addressRead = address.Select(_mapper.Map<AddressReadDto>);
+        return addressRead;
+    }
 }

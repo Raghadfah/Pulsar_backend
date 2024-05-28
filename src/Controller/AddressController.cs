@@ -69,4 +69,9 @@ public class AddressController : BaseController
         }
         return NoContent();
     }
+    [HttpGet("user/{id}")]
+    public IEnumerable<AddressReadDto> FindByUserId(Guid id)
+    {
+        return _addressService.FindByUserId(id);
+    }
 }
